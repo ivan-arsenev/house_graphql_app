@@ -1,7 +1,8 @@
+require("dotenv").config()
 import { google } from "googleapis"
 
 const auth = new google.auth.OAuth2(
-  process.env.G_CLIENT_D,
+  process.env.G_CLIENT_ID,
   process.env.G_CLIENT_SECRET,
   `${process.env.REDIRECT_URL}/login`
 )
