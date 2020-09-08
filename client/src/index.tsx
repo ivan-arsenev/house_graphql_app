@@ -1,14 +1,17 @@
+import "./styles/index.css"
+
+import * as serviceWorker from "./serviceWorker"
+
+import { Home, Host, Listing, Listings, Login, NotFound, User } from "./sections"
 import React, { useState } from "react"
-import { render } from "react-dom"
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
+import { Route, BrowserRouter as Router, Switch } from "react-router-dom"
+
 import ApolloClient from "apollo-boost"
 import { ApolloProvider } from "@apollo/react-hooks"
-import { Listings, Home, Host, Listing, User, NotFound, Login } from "./sections"
-import * as serviceWorker from "./serviceWorker"
 import { Layout } from 'antd'
 import { Viewer } from './lib/types'
+import { render } from "react-dom"
 
-import "./styles/index.css"
 const client = new ApolloClient({
   uri: "/api",
 })
@@ -24,7 +27,7 @@ const initialViewer: Viewer = {
 
 const App = () => {
   const [viewer, setViewer] = useState<Viewer>(initialViewer)
-
+  console.log(viewer)
   return (
     <Router>
       <Layout id="app">

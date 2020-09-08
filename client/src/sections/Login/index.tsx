@@ -20,7 +20,13 @@ const { Text, Title } = Typography
 export const Login = ({ setViewer }: Props) => {
   const client = useApolloClient()
   const [logIn, { data: LogInData, loading: logInLoading, error: logInError }]
-    = useMutation<LogInData, LogInVariables>(LOG_IN)
+    = useMutation<LogInData, LogInVariables>(LOG_IN, {
+      onCompleted: data => {
+        if (data && data.logIn) {
+          setViewer(data.logIn)
+        }
+      }
+    })
   const logInRef = useRef(logIn)
 
   useEffect(() => {
