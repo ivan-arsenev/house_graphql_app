@@ -1,14 +1,16 @@
 import { Card, Layout, Spin, Typography } from 'antd'
 import { LogIn as LogInData, LogInVariables } from '../../lib/graphql/mutations/LogIn/__generated__/LogIn'
 import React, { useEffect, useRef } from "react"
+import { displayErrorMessage, displaySuccessNotification } from '../../lib/utils'
 import { useApolloClient, useMutation } from '@apollo/react-hooks'
 
 import { AUTH_URL } from '../../lib/graphql/queries'
 import { AuthUrl as AuthUrlData } from '../../lib/graphql/queries/AuthUrl/__generated__/AuthUrl'
+import { ErrorBanner } from '../../lib/components'
 import { LOG_IN } from '../../lib/graphql/mutations'
+import { Redirect } from 'react-router-dom'
 import { Viewer } from '../../lib/types'
 import googleLogo from "./assets/google_logo.jpg"
-import { loadavg } from 'os'
 
 interface Props {
   setViewer: (viewer: Viewer) => void;
@@ -25,6 +27,7 @@ export const Login = ({ setViewer }: Props) => {
       onCompleted: data => {
         if (data && data.logIn) {
           setViewer(data.logIn)
+          displaySuccessNotification("You're successfully logged in!")
         }
       }
     })
@@ -48,7 +51,7 @@ export const Login = ({ setViewer }: Props) => {
       })
       window.location.href = data.authUrl
     } catch (error) {
-
+      displayErrorMessage("Sorry, We aren't able to log you in, try again later.")
     }
   }
 
@@ -60,8 +63,18 @@ export const Login = ({ setViewer }: Props) => {
     )
   }
 
+  if (LogInData && LogInData.logIn) {
+    const { id: viewerId } = LogInData.logIn
+    return <Redirect to={`/user/${viewerId}`} />
+  }
+
+  const logInErrorBannerElement = logInError ?
+    <ErrorBanner description="Sorry, We aren't able to log you in, try again later." />
+    : null
+
   return (
     <Content className="log-in">
+      {logInErrorBannerElement}
       <Card className="log-in-card">
         <div className="log-in-card__intro">
           <Title level={3} className="log-in-card__intro-title">
