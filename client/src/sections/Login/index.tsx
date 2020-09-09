@@ -1,4 +1,4 @@
-import { Card, Layout, Typography } from 'antd'
+import { Card, Layout, Spin, Typography } from 'antd'
 import { LogIn as LogInData, LogInVariables } from '../../lib/graphql/mutations/LogIn/__generated__/LogIn'
 import React, { useEffect, useRef } from "react"
 import { useApolloClient, useMutation } from '@apollo/react-hooks'
@@ -8,6 +8,7 @@ import { AuthUrl as AuthUrlData } from '../../lib/graphql/queries/AuthUrl/__gene
 import { LOG_IN } from '../../lib/graphql/mutations'
 import { Viewer } from '../../lib/types'
 import googleLogo from "./assets/google_logo.jpg"
+import { loadavg } from 'os'
 
 interface Props {
   setViewer: (viewer: Viewer) => void;
@@ -45,15 +46,21 @@ export const Login = ({ setViewer }: Props) => {
       const { data } = await client.query<AuthUrlData>({
         query: AUTH_URL
       })
+      window.location.href = data.authUrl
     } catch (error) {
 
     }
   }
 
-
+  if (logInLoading) {
+    return (
+      <Content className='log-in'>
+        <Spin size='large' tip='Login you....' />
+      </Content>
+    )
+  }
 
   return (
-
     <Content className="log-in">
       <Card className="log-in-card">
         <div className="log-in-card__intro">
