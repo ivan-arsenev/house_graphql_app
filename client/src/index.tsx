@@ -2,13 +2,13 @@ import "./styles/index.css"
 
 import * as serviceWorker from "./serviceWorker"
 
-import { Home, Host, Listing, Listings, Login, NotFound, User } from "./sections"
+import { Affix, Layout } from 'antd'
+import { AppHeader, Home, Host, Listing, Listings, Login, NotFound, User } from "./sections"
 import React, { useState } from "react"
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom"
 
 import ApolloClient from "apollo-boost"
 import { ApolloProvider } from "@apollo/react-hooks"
-import { Layout } from 'antd'
 import { Viewer } from './lib/types'
 import { render } from "react-dom"
 
@@ -30,7 +30,10 @@ const App = () => {
 
   return (
     <Router>
-      <Layout id="app">
+      <Layout id="app" className='app__affix-header'>
+        <Affix offsetTop={0}>
+          <AppHeader viewer={viewer} setViewer={setViewer} />
+        </Affix>
         <Switch>
           <Route exact path="/" component={Home} />
           <Route exact path="/host" component={Host} />
