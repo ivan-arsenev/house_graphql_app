@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { MenuItems } from './components'
 import React from 'react'
 import { Viewer } from '../../lib/types'
-import logo from './assets/country-in-the-house.svg'
+import logo from './assets/logo.png'
 
 const { Header } = Layout
 

@@ -2,13 +2,19 @@ import "./styles/index.css"
 
 import * as serviceWorker from "./serviceWorker"
 
-import { Affix, Layout } from 'antd'
+import { Affix, Layout, Spin } from 'antd'
+import { ApolloProvider, useMutation } from "@apollo/react-hooks"
 import { AppHeader, Home, Host, Listing, Listings, Login, NotFound, User } from "./sections"
-import React, { useState } from "react"
+import { AppHeaderSkeleton, ErrorBanner } from "./lib/components"
+import {
+  LogIn as LogInData,
+  LogInVariables
+} from "./lib/graphql/mutations/LogIn/__generated__/LogIn";
+import React, { useEffect, useRef, useState } from "react"
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom"
 
 import ApolloClient from "apollo-boost"
-import { ApolloProvider } from "@apollo/react-hooks"
+import { LOG_IN } from './lib/graphql/mutations'
 import { Viewer } from './lib/types'
 import { render } from "react-dom"
 
@@ -27,10 +33,39 @@ const initialViewer: Viewer = {
 
 const App = () => {
   const [viewer, setViewer] = useState<Viewer>(initialViewer)
+  const [logIn, { error }] = useMutation<LogInData, LogInVariables>(LOG_IN, {
+    onCompleted: data => {
+      if (data && data.logIn) {
+        setViewer(data.logIn)
+      }
+    }
+  })
+
+  const logInRef = useRef(logIn)
+
+  useEffect(() => {
+    logInRef.current()
+  }, [])
+
+  if (!viewer.didRequest && !error) {
+    return (
+      <Layout className='app-skeleton'>
+        <AppHeaderSkeleton />
+        <div className="app-skeleton__spin-section">
+          <Spin size='large' tip='Launching house app' />
+        </div>
+      </Layout>
+    )
+  }
+
+  const logInErrorBannerElement = error ?
+    <ErrorBanner description="We weren't able to verify if you were logged in. Try again later" />
+    : null
 
   return (
     <Router>
       <Layout id="app" className='app__affix-header'>
+        {logInErrorBannerElement}
         <Affix offsetTop={0}>
           <AppHeader viewer={viewer} setViewer={setViewer} />
         </Affix>
