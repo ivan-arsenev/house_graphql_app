@@ -60,6 +60,7 @@ export interface User {
   income: number
   bookings: ObjectId[] // one to many relationship
   listings: ObjectId[] // one to many
+  authorized?: boolean // not part of document in DB, only for resolver
 }
 
 export interface Database {
