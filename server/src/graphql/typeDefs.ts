@@ -42,7 +42,7 @@ export const typeDefs = gql`
     id: ID!
     name: String!
     avatar: String!
-    contract: String!
+    contact: String!
     hasWallet: Boolean!
     income: Int
     bookings(limit: Int!, page: Int!): Bookings
