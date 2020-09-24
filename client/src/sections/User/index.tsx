@@ -2,10 +2,10 @@ import { Col, Layout, Row } from 'antd'
 import { ErrorBanner, PageSkeleton } from '../../lib/components'
 import React, { useState } from 'react'
 import { User as UserData, UserVariables } from '../../lib/graphql/queries/User/__generated__/User'
+import { UserListings, UserProfile } from './components'
 
 import { RouteComponentProps } from 'react-router-dom'
 import { USER } from '../../lib/graphql/queries'
-import { UserProfile } from './components'
 import { Viewer } from '../../lib/types'
 import { useQuery } from '@apollo/react-hooks'
 
