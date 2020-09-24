@@ -5,23 +5,24 @@ import React from 'react'
 import { User } from '../../../../lib/graphql/queries/User/__generated__/User'
 
 interface Props {
-    userListings: User['user']['listings']
-    listingsPage: number
+    userBookings: User['user']['bookings']
+    bookingsPage: number
     limit: number
-    setListingsPage: (page: number) => void
+    setBookingsPage: (page: number) => void
 }
 
-const { Paragraph, Title } = Typography
+const { Paragraph, Text, Title } = Typography
 
-export const UserListings = ({
-    userListings,
-    listingsPage,
+export const UserBookings = ({
+    userBookings,
+    bookingsPage,
     limit,
-    setListingsPage
+    setBookingsPage
 }: Props) => {
-    const { total, result } = userListings
+    const total = userBookings ? userBookings.total : null
+    const result = userBookings ? userBookings.result : null
 
-    const userListingsList = (
+    const userBookingsList = total && result ? (
         <List grid={{
             gutter: 8,
             xs: 1,
@@ -29,33 +30,49 @@ export const UserListings = ({
             lg: 4
         }}
             dataSource={result}
-            locale={{ emptyText: "User doesn't have any listings yet!" }}
+            locale={{ emptyText: "Your haven't made any bookings" }}
             pagination={{
                 position: 'top',
-                current: listingsPage,
+                current: bookingsPage,
                 total,
                 defaultPageSize: limit,
                 hideOnSinglePage: true,
                 showLessItems: true,
-                onChange: (page: number) => setListingsPage(page)
+                onChange: (page: number) => setBookingsPage(page)
             }}
-            renderItem={userListings => (
-                <List.Item>
-                    <ListingCard listing={userListings} />
+            renderItem={userBookings => {
+                const bookingHistory =
+                    <div className="user-bookings__booking-history">
+                        <div>
+                            Check in: <Text strong>
+                                {userBookings.checkIn}
+                            </Text>
+                        </div>
+                        <div>
+                            Check out: <Text strong>
+                                {userBookings.checkOut}
+                            </Text>
+                        </div>
+                    </div>
+                return <List.Item>
+                    {bookingHistory}
+                    <ListingCard listing={userBookings.listing} />
                 </List.Item>
-            )}
+            }}
         />
-    )
+    ) : null
 
-    return (
-        <div className="user-listings">
-            <Title level={4} className="user-listings__title">
+    const userBookingsElement = userBookingsList ? (
+        <div className="user-bookings">
+            <Title level={4} className="user-bookings__title">
                 Listings
             </Title>
-            <Paragraph className='user-listings__description'>
+            <Paragraph className='user-bookings__description'>
                 This section highlights the listings this user currently hosts and make available for booking
             </Paragraph>
-            {userListingsList}
+            {userBookingsList}
         </div >
-    )
+    ) : null
+
+    return userBookingsElement
 }
