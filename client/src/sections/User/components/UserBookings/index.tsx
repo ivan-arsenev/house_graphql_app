@@ -19,10 +19,10 @@ export const UserBookings = ({
     limit,
     setBookingsPage
 }: Props) => {
-    const total = userBookings ? userBookings.total : null
-    const result = userBookings ? userBookings.result : null
+    const total = userBookings ? userBookings.total : undefined
+    const result = userBookings ? userBookings.result : undefined
 
-    const userBookingsList = total && result ? (
+    const userBookingsList = userBookings ? (
         <List grid={{
             gutter: 8,
             xs: 1,
