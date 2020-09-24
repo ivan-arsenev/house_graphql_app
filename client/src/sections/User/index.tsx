@@ -1,8 +1,8 @@
 import { Col, Layout, Row } from 'antd'
 import { ErrorBanner, PageSkeleton } from '../../lib/components'
+import React, { useState } from 'react'
 import { User as UserData, UserVariables } from '../../lib/graphql/queries/User/__generated__/User'
 
-import React from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 import { USER } from '../../lib/graphql/queries'
 import { UserProfile } from './components'
@@ -18,12 +18,20 @@ interface MatchParams {
 }
 
 const { Content } = Layout
+const PAGE_LIMIT = 4
 
 export const User = ({ match, viewer }: Props & RouteComponentProps<MatchParams>) => {
+    const [listingsPage, setListingsPage] = useState(1)
+    const [bookingsPage, setBookingsPage] = useState(1)
+
+
 
     const { data, loading, error } = useQuery<UserData, UserVariables>(USER, {
         variables: {
-            id: match.params.id
+            id: match.params.id,
+            bookingsPage,
+            listingsPage,
+            limit: PAGE_LIMIT
         }
     })
 
@@ -48,12 +56,38 @@ export const User = ({ match, viewer }: Props & RouteComponentProps<MatchParams>
     const user = data ? data.user : null
     const viewerIsUser = viewer.id === match.params.id
 
-    const userProfileElement = user ? <UserProfile viewerIsUser={viewerIsUser} user={user} /> : null
+    const userListings = user ? user.listings : null
+    const userBookings = user ? user.bookings : null
+
+    const userProfileElement = user ?
+        <UserProfile
+            viewerIsUser={viewerIsUser}
+            user={user} />
+        : null
+
+    const userListingsElement = userListings ?
+        <UserListings
+            userListings={userListings}
+            listingsPage={listingsPage}
+            limit={PAGE_LIMIT}
+            setListingsPage={setListingsPage} />
+        : null
+
+    const userBookingsElement = userBookings ?
+        <UserBookings
+            userBookings={userBookings}
+            listingsPage={listingsPage}
+            limit={PAGE_LIMIT}
+            setBookingsPage={setBookingsPage} />
+        : null
 
     return (
         <Content className='user'>
             <Row gutter={12} type='flex' justify='space-between'>
                 <Col xs={24}>{userProfileElement}</Col>
+                <Col xs={24}>
+                    {userListingsElement}
+                    {userBookingsElement}</Col>
             </Row>
         </Content>
     )

@@ -7,7 +7,6 @@ import {
   UserListingsData,
 } from "./types"
 
-import { Db } from "mongodb"
 import { IResolvers } from "apollo-server-express"
 import { Request } from "express"
 import { authorize } from "../../../lib/utils"

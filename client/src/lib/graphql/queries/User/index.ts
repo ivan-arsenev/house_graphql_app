@@ -29,16 +29,11 @@ export const USER = gql`
         total
         result {
           id
-          listing {
-            id
-            title
-            image
-            address
-            price
-            numOfGuests
-          }
-          checkIn
-          checkOut
+          title
+          image
+          address
+          price
+          numOfGuests
         }
       }
     }

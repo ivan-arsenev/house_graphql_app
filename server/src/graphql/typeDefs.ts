@@ -46,7 +46,7 @@ export const typeDefs = gql`
     hasWallet: Boolean!
     income: Int
     bookings(limit: Int!, page: Int!): Bookings
-    listings(limit: Int!, page: Int!): Listing!
+    listings(limit: Int!, page: Int!): Listings!
   }
 
   type Viewer {
