@@ -33,7 +33,17 @@ export const listingResolvers: IResolvers = {
     id: (listing: Listing): string => {
       return listing._id.toString()
     },
-
+    host: async (
+      listing: Listing,
+      _args: {},
+      { db }: { db: Database }
+    ): Promise<User> => {
+      const host = await db.users.findOne({ _id: listing.host })
+      if (!host) {
+        throw new Error("host can't be found")
+      }
+      return host
+    },
     bookingsIndex: (listing: Listing): string => {
       return JSON.stringify(listing.bookingsIndex)
     },
