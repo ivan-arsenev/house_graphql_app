@@ -48,6 +48,7 @@ export interface Listing {
   bookingsIndex: BookingsIndex
   price: number
   numOfGuests: number
+  authorized?: boolean // not part of document in DB, only for resolver
 }
 
 export interface User {

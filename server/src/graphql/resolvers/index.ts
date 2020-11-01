@@ -1,5 +1,5 @@
-import { bookingResolvers } from "./Bookings"
-import { listingResolvers } from "./Listings"
+import { bookingResolvers } from "./Booking"
+import { listingResolvers } from "./Listing"
 import merge from "lodash.merge"
 import { userResolvers } from "./User"
 import { viewerResolvers } from "./Viewer"
