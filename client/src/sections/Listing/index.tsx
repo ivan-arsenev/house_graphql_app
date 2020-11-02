@@ -1,9 +1,9 @@
+import { ErrorBanner, PageSkeleton } from '../../lib/components'
 import { Listing as ListingData, ListingVariables } from '../../lib/graphql/queries/Listing/__generated__/Listing'
 import React, { useState } from 'react'
 
 import { LISTING } from '../../lib/graphql/queries'
 import { Layout } from 'antd'
-import { PageSkeleton } from '../../lib/components'
 import { RouteComponentProps } from 'react-router-dom'
 import { useQuery } from '@apollo/react-hooks'
 
@@ -34,8 +34,16 @@ export const Listing = ({ match }: RouteComponentProps<MatchParams>) => {
     }
 
     if (error) {
-
+        return (
+            <Content className='listings'>
+                <ErrorBanner description="This listing may not exist or we've encountered an error. Please try again soon!" />
+                <PageSkeleton />
+            </Content>
+        )
     }
+
+    const listing = data ? data.listing : null
+    const listingBookings = listing ? listing.bookings : null
 
     return (
         <div>
