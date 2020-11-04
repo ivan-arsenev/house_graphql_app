@@ -29,7 +29,7 @@ export const UserBookings = ({
             sm: 2,
             lg: 4
         }}
-            dataSource={result}
+            dataSource={result ? result : undefined}
             locale={{ emptyText: "Your haven't made any bookings" }}
             pagination={{
                 position: 'top',

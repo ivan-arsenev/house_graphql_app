@@ -1,7 +1,9 @@
 import { Avatar, Divider, Icon, Tag, Typography } from 'antd'
 
+import { Link } from 'react-router-dom'
 import { Listing as ListingData } from '../../../../lib/graphql/queries/Listing/__generated__/Listing'
 import React from 'react'
+import { iconColor } from '../../../../lib/utils'
 
 interface Props {
     listing: ListingData["listing"]
@@ -17,8 +19,10 @@ export const ListingDetails = ({ listing }: Props) => {
             <div style={{ backgroundImage: `url(${image})` }} className="listing-details__image" />
 
             <div className='listing-details__information'>
-                <Paragraph type='secondary' ellipsis className='listing-details__city-address'>
-                    <Icon type='environment' />{city}
+                <Paragraph type='secondary' ellipsis={true} className='listing-details__city-address'>
+                    <Link to={`/listings/${city}`} >
+                        <Icon type='environment' style={{ color: iconColor }} />{city}
+                    </Link>
                     <Divider type='vertical' />
                     {address}
                 </Paragraph>
@@ -27,17 +31,21 @@ export const ListingDetails = ({ listing }: Props) => {
                 </Title>
             </div>
 
+            <Divider />
+
             <div className="listing-details__section">
-                <Avatar src={host.avatar} size={64} />
-                <Title level={2} className="listing-details__host-name">
-                    {host.name}
-                </Title>
+                <Link to={`/user/${host.id}`}>
+                    <Title level={2} className="listing-details__host-name">
+                        <Avatar src={host.avatar} size={64} />
+                        {host.name}
+                    </Title>
+                </Link>
             </div>
             <Divider />
 
             <div className="listing-details__section">
                 <Title level={4}>About this space</Title>
-                <div className="lisitng-details__about-items">
+                <div className="listing-details__about-items">
                     <Tag color='magenta'>{type}</Tag>
                     <Tag color='magenta'>{numOfGuests} Guests</Tag>
                 </div>

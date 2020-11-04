@@ -1,9 +1,10 @@
+import { Col, Layout, Row } from 'antd'
 import { ErrorBanner, PageSkeleton } from '../../lib/components'
+import { ListingBookings, ListingDetails } from './components'
 import { Listing as ListingData, ListingVariables } from '../../lib/graphql/queries/Listing/__generated__/Listing'
 import React, { useState } from 'react'
 
 import { LISTING } from '../../lib/graphql/queries'
-import { Layout } from 'antd'
 import { RouteComponentProps } from 'react-router-dom'
 import { useQuery } from '@apollo/react-hooks'
 
@@ -45,9 +46,25 @@ export const Listing = ({ match }: RouteComponentProps<MatchParams>) => {
     const listing = data ? data.listing : null
     const listingBookings = listing ? listing.bookings : null
 
+    const listingDetailsElement = listing ? <ListingDetails listing={listing} /> : null
+
+    const listingBookingsElement = listingBookings ?
+        <ListingBookings
+            setBookingsPage={setBookingsPage}
+            bookingsPage={1}
+            limit={1}
+            listingBookings={listingBookings}
+        /> : null
+
+
     return (
-        <div>
-            Listing
-        </div>
+        <Content className='listings'>
+            <Row gutter={24} type='flex' justify='space-between'>
+                <Col xs={24} lg={14}  >
+                    {listingDetailsElement}
+                    {listingBookingsElement}
+                </Col>
+            </Row>
+        </Content>
     )
 }
