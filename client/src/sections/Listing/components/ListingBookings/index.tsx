@@ -1,5 +1,6 @@
 import { Avatar, Divider, List, Typography } from 'antd'
 
+import { Link } from 'react-router-dom'
 import { Listing } from '../../../../lib/graphql/queries/Listing/__generated__/Listing'
 import React from 'react'
 
@@ -55,7 +56,9 @@ export const ListingBookings = ({
                     </div>
                 return <List.Item>
                     {bookingHistory}
-                    <Avatar src={listingBooking.tenant.avatar} size={64} shape="square" />
+                    <Link to={`/user/${listingBooking.tenant.id}`} >
+                        <Avatar src={listingBooking.tenant.avatar} size={64} shape="square" />
+                    </Link>
                 </List.Item>
             }}
         />
