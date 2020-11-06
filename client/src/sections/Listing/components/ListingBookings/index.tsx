@@ -32,7 +32,14 @@ export const ListingBookings = ({
             }}
             dataSource={result ? result : undefined}
             locale={{ emptyText: "No bookings have been made yet" }}
-
+            pagination={{
+                current: bookingsPage,
+                total,
+                defaultPageSize: limit,
+                hideOnSinglePage: true,
+                showLessItems: true,
+                onChange: (page: number) => setBookingsPage(page)
+            }}
             renderItem={listingBooking => {
                 const bookingHistory =
                     <div className="listing-bookings__history">
