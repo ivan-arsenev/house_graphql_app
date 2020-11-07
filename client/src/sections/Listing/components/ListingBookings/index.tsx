@@ -19,8 +19,6 @@ export const ListingBookings = ({
     limit,
     setBookingsPage
 }: Props) => {
-    const total = listingBookings ? listingBookings.total : undefined
-    const result = listingBookings ? listingBookings.result : undefined
 
     const listingBookingsList = listingBookings ? (
         <List
