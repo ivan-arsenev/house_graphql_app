@@ -14,9 +14,7 @@ interface Props {
 const { Text, Title } = Typography
 
 export const ListingBookings = ({
-    listingBookings,
-    bookingsPage,
-    limit,
+ 
     setBookingsPage
 }: Props) => {
     const total = listingBookings ? listingBookings.total : undefined
