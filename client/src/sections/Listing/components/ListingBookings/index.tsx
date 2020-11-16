@@ -6,8 +6,7 @@ import React from 'react'
 
 interface Props {
     listingBookings: Listing['listing']['bookings']
-    bookingsPage: number
-    limit: number
+
     setBookingsPage: (page: number) => void
 }
 
