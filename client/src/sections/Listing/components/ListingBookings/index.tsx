@@ -11,7 +11,12 @@ interface Props {
     setBookingsPage: (page: number) => void
 }
 
+const { Text, Title } = Typography
 
+export const ListingBookings = ({
+    listingBookings,
+    bookingsPage,
+    limit,
     setBookingsPage
 }: Props) => {
     const total = listingBookings ? listingBookings.total : undefined
