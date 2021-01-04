@@ -52,7 +52,7 @@ export const ListingCreateBooking = ({ price, checkInDate, checkOutDate, setChec
                 value={dateValue ? dateValue : undefined}
                 onChange={onChangeFunc}
                 disabled={checkOutInputDisabled}
-
+                onOpenChange={() => checkIn && setCheckOutDate(null)}
             />
         </div>
     }
