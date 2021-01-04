@@ -1,15 +1,20 @@
-import { Button, Card, Divider, Typography } from 'antd'
+import { Button, Card, DatePicker, Divider, Typography } from 'antd'
 
+import { Moment } from 'moment'
 import React from 'react'
 import { formatListingPrice } from '../../../../lib/utils'
 
-const { Paragraph, Text, Title } = Typography
+const { Paragraph, Title } = Typography
 
 interface Props {
-    price: number
+    price: number;
+    checkInDate: Moment | null;
+    checkOutDate: Moment | null;
+    setCheckOutDate: (checkOutDate: Moment | null) => void;
+    setCheckInDate: (checkInDate: Moment | null) => void;
 }
 
-export const ListingCreateBooking = ({ price }: Props) => {
+export const ListingCreateBooking = ({ price, checkInDate, checkOutDate, setCheckOutDate, setCheckInDate }: Props) => {
     return (
         <div>
             <Card className="listing-booking__card">
@@ -17,14 +22,17 @@ export const ListingCreateBooking = ({ price }: Props) => {
                     <Paragraph>
                         <Title level={2} className='listing-booking__card-title'>
                             {formatListingPrice(price)}
+                            <span>/day</span>
                         </Title>
                     </Paragraph>
                     <Divider />
                     <div className='listing-booking__card-date-picker'>
                         <Paragraph strong>Check In</Paragraph>
+                        <DatePicker />
                     </div>
                     <div className='listing-booking__card-date-picker'>
                         <Paragraph strong>Check out</Paragraph>
+                        <DatePicker />
                     </div>
                 </div>
                 <Divider />
