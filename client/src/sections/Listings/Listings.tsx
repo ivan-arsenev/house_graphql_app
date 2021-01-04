@@ -1,14 +1,14 @@
-import React from "react";
-import { gql } from "apollo-boost";
-import { useQuery, useMutation } from "@apollo/react-hooks";
 import { Alert, Avatar, Button, List, Spin } from "antd";
-import { Listings as ListingsData } from "./__generated__/Listings";
-import { ListingsSkeleton } from "./components";
 import {
   DeleteListing as DeleteListingData,
   DeleteListingVariables
 } from "./__generated__/DeleteListing";
-import "./styles/Listings.css";
+import { useMutation, useQuery } from "@apollo/react-hooks";
+
+import { Listings as ListingsData } from "./__generated__/Listings";
+import { ListingsSkeleton } from "./components";
+import React from "react";
+import { gql } from "apollo-boost";
 
 const LISTINGS = gql`
   query Listings {

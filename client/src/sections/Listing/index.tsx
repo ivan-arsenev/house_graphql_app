@@ -1,6 +1,6 @@
 import { Col, Layout, Row } from 'antd'
 import { ErrorBanner, PageSkeleton } from '../../lib/components'
-import { ListingBookings, ListingDetails } from './components'
+import { ListingBookings, ListingCreateBooking, ListingDetails } from './components'
 import { Listing as ListingData, ListingVariables } from '../../lib/graphql/queries/Listing/__generated__/Listing'
 import React, { useState } from 'react'
 
@@ -56,13 +56,17 @@ export const Listing = ({ match }: RouteComponentProps<MatchParams>) => {
             listingBookings={listingBookings}
         /> : null
 
+    const listingCreateBooking = listing ? <ListingCreateBooking price={listing.price} /> : null
 
     return (
         <Content className='listings'>
             <Row gutter={24} type='flex' justify='space-between'>
-                <Col xs={24} lg={14}  >
+                <Col xs={24} lg={14}>
                     {listingDetailsElement}
                     {listingBookingsElement}
+                </Col>
+                <Col xs={24} lg={10}>
+                    {listingCreateBooking}
                 </Col>
             </Row>
         </Content>
