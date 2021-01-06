@@ -1,4 +1,3 @@
-import { fromPromise } from "apollo-boost"
 import { gql } from "apollo-boost"
 
 export const LISTING = gql`

@@ -1,20 +1,21 @@
-import React from "react";
+import { Col, Layout, Row, Typography } from "antd";
+import { HomeHero, HomeListings, HomeListingsSkeleton } from "./components";
 import { Link, useHistory } from "react-router-dom";
-import { useQuery } from "@apollo/react-hooks";
-import { Col, Row, Layout, Typography } from "antd";
-import { LISTINGS } from "../../lib/graphql/queries";
 import {
   Listings as ListingsData,
   ListingsVariables,
 } from "../../lib/graphql/queries/Listings/__generated__/Listings";
-import { ListingsFilter } from "../../lib/graphql/globalTypes";
-import { useScrollToTop } from "../../lib/hooks";
-import { displayErrorMessage } from "../../lib/utils";
-import { HomeHero, HomeListings, HomeListingsSkeleton } from "./components";
 
+import { LISTINGS } from "../../lib/graphql/queries";
+import { ListingsFilter } from "../../lib/graphql/globalTypes";
+import React from "react";
+import cancunImage from "./assets/cancun.jpg";
+import { displayErrorMessage } from "../../lib/utils";
 import mapBackground from "./assets/map-background.jpg";
 import sanFransiscoImage from "./assets/san-fransisco.jpg";
-import cancunImage from "./assets/cancun.jpg";
+import { useQuery } from "@apollo/react-hooks";
+
+//import { useScrollToTop } from "../../lib/hooks";
 
 const { Content } = Layout;
 const { Paragraph, Title } = Typography;
@@ -33,7 +34,7 @@ export const Home = () => {
   });
 
   const history = useHistory();
-  useScrollToTop();
+  // useScrollToTop();
 
   const onSearch = (value: string) => {
     const trimmedValue = value.trim();
