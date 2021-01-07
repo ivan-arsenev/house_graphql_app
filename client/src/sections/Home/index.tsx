@@ -18,7 +18,6 @@ import { useQuery } from "@apollo/react-hooks";
 //import { useScrollToTop } from "../../lib/hooks";
 
 
-
 const { Content } = Layout;
 const { Paragraph, Title } = Typography;
 
