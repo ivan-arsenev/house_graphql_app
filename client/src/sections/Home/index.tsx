@@ -17,6 +17,8 @@ import { useQuery } from "@apollo/react-hooks";
 
 //import { useScrollToTop } from "../../lib/hooks";
 
+
+
 const { Content } = Layout;
 const { Paragraph, Title } = Typography;
 
@@ -52,7 +54,7 @@ export const Home = () => {
     }
 
     if (data) {
-      return <HomeListings title="Premium Listings" listings={data.listings.result} />;
+      return <HomeList ings title="Premium Listings" listings={data.listings.result} />;
     }
 
     return null;
