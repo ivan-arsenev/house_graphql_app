@@ -21,8 +21,6 @@ import { useQuery } from "@apollo/react-hooks";
 const { Content } = Layout;
 const { Paragraph, Title } = Typography;
 
-
-
 const PAGE_LIMIT = 4;
 const PAGE_NUMBER = 1;
 
