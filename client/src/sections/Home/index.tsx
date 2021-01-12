@@ -24,6 +24,8 @@ const { Paragraph, Title } = Typography;
 const PAGE_LIMIT = 4;
 const PAGE_NUMBER = 1;
 
+
+
 export const Home = () => {
   const { loading, data } = useQuery<ListingsData, ListingsVariables>(LISTINGS, {
     variables: {
@@ -53,7 +55,7 @@ export const Home = () => {
     }
 
     if (data) {
-      return <HomeList ings title="Premium Listings" listings={data.listings.result} />;
+      return <HomeListings title="Premium Listings" listings={data.listings.result} />;
     }
 
     return null;
