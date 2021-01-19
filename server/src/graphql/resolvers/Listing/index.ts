@@ -6,8 +6,10 @@ import {
   ListingsArgs,
   ListingsData,
   ListingsFilter,
+  ListingsQuery,
 } from "./types"
 
+import { Google } from "../../../lib/api"
 import { IResolvers } from "apollo-server-express"
 import { ObjectId } from "mongodb"
 import { Request } from "express"
@@ -37,13 +39,23 @@ export const listingResolvers: IResolvers = {
     },
     listings: async (
       _root: undefined,
-      { filter, limit, page }: ListingsArgs,
+      { location, filter, limit, page }: ListingsArgs,
       { db }: { db: Database }
     ): Promise<ListingsData> => {
       try {
+        const query: ListingsQuery = {}
         const data: ListingsData = {
           total: 0,
           result: [],
+        }
+
+        if (location) {
+          const { country, admin, city } = await Google.geocode(location)
+
+          if (city) query.city = city
+          if (admin) query.admin = admin
+          if (country) query.country = country
+          else throw new Error("no country found")
         }
 
         // we simply find all listings collection for all users
