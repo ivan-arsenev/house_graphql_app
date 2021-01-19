@@ -59,7 +59,7 @@ export const listingResolvers: IResolvers = {
         }
 
         // we simply find all listings collection for all users
-        let cursor = await db.listings.find({})
+        let cursor = await db.listings.find(query)
 
         if (filter && filter === ListingsFilter.PRICE_LOW_TO_HIGH) {
           cursor = cursor.sort({ price: 1 }) // with set of listing based on criteria, sort method position of doc in our collection with prop based on listed documents, from lowest to highest
