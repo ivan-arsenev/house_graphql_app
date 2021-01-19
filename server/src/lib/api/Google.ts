@@ -64,15 +64,17 @@ export const Google = {
   geocode: async (address: string) => {
     if (!process.env.G_GEOCODE_KEY)
       throw new Error("missing Google Maps API key")
+    try {
+      const res = await maps.geocode({
+        params: { address, key: process.env.G_GEOCODE_KEY },
+      })
+      if (res.status < 200 || res.status > 299) {
+        throw new Error("failed to geocode address")
+      }
 
-    const res = await maps.geocode({
-      params: { address, key: process.env.G_GEOCODE_KEY },
-    })
-
-    if (res.status < 200 || res.status > 299) {
-      throw new Error("failed to geocode address")
+      return parseAddress(res.data.results[0].address_components)
+    } catch (error) {
+      throw new Error(error.response.data.error_message)
     }
-
-    return parseAddress(res.data.results[0].address_components)
   },
 }
