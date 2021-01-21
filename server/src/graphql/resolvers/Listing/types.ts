@@ -28,6 +28,7 @@ export interface ListingsArgs {
 
 export interface ListingsData {
   total: number
+  region: string | null
   result: Listing[]
 }
 

@@ -45,6 +45,7 @@ export const listingResolvers: IResolvers = {
       try {
         const query: ListingsQuery = {}
         const data: ListingsData = {
+          region: null,
           total: 0,
           result: [],
         }
@@ -56,6 +57,10 @@ export const listingResolvers: IResolvers = {
           if (admin) query.admin = admin
           if (country) query.country = country
           else throw new Error("no country found")
+
+          const cityText = city ? `${city}, ` : ""
+          const adminText = admin ? `${admin}, ` : ""
+          data.region = `${cityText}${adminText}${country}`
         }
 
         // we simply find all listings collection for all users
