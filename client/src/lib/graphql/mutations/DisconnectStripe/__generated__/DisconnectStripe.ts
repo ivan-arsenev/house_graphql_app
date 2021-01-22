@@ -3,18 +3,14 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: LogOut
+// GraphQL mutation operation: DisconnectStripe
 // ====================================================
 
-export interface LogOut_logOut {
+export interface DisconnectStripe_disconnectStripe {
   __typename: "Viewer";
-  id: string | null;
-  token: string | null;
-  avatar: string | null;
   hasWallet: boolean | null;
-  didRequest: boolean;
 }
 
-export interface LogOut {
-  logOut: LogOut_logOut;
+export interface DisconnectStripe {
+  disconnectStripe: DisconnectStripe_disconnectStripe;
 }

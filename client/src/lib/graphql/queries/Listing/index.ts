@@ -1,4 +1,4 @@
-import { gql } from "apollo-boost"
+import { gql } from "apollo-boost";
 
 export const LISTING = gql`
   query Listing($id: ID!, $bookingsPage: Int!, $limit: Int!) {
@@ -34,4 +34,4 @@ export const LISTING = gql`
       numOfGuests
     }
   }
-`
+`;

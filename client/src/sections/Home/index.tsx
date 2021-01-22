@@ -14,9 +14,7 @@ import { displayErrorMessage } from "../../lib/utils";
 import mapBackground from "./assets/map-background.jpg";
 import sanFransiscoImage from "./assets/san-fransisco.jpg";
 import { useQuery } from "@apollo/react-hooks";
-
-//import { useScrollToTop } from "../../lib/hooks";
-
+import { useScrollToTop } from "../../lib/hooks";
 
 const { Content } = Layout;
 const { Paragraph, Title } = Typography;
@@ -37,7 +35,7 @@ export const Home = () => {
   });
 
   const history = useHistory();
-  // useScrollToTop();
+  useScrollToTop();
 
   const onSearch = (value: string) => {
     const trimmedValue = value.trim();

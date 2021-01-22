@@ -1,6 +1,5 @@
 /* tslint:disable */
 /* eslint-disable */
-// @generated
 // This file was automatically generated and should not be edited.
 
 import { ListingsFilter } from "./../../../globalTypes";
@@ -21,6 +20,8 @@ export interface Listings_listings_result {
 
 export interface Listings_listings {
   __typename: "Listings";
+  region: string | null;
+  total: number;
   result: Listings_listings_result[];
 }
 
@@ -29,6 +30,7 @@ export interface Listings {
 }
 
 export interface ListingsVariables {
+  location?: string | null;
   filter: ListingsFilter;
   limit: number;
   page: number;

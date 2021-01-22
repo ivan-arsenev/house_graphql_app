@@ -1,11 +1,11 @@
-import { message, notification } from "antd"
+import { message, notification } from "antd";
 
-export const iconColor = "#1890ff"
+export const iconColor = "#1890ff";
 
 export const formatListingPrice = (price: number, round = true) => {
-  const formattedListingPrice = round ? Math.round(price / 100) : price / 100
-  return `$${formattedListingPrice}`
-}
+  const formattedListingPrice = round ? Math.round(price / 100) : price / 100;
+  return `$${formattedListingPrice}`;
+};
 
 export const displaySuccessNotification = (
   message: string,
@@ -15,10 +15,12 @@ export const displaySuccessNotification = (
     message,
     description,
     placement: "topLeft",
-    style: { marginTop: 50 },
-  })
-}
+    style: {
+      marginTop: 50
+    }
+  });
+};
 
 export const displayErrorMessage = (error: string) => {
-  return message.error(error)
-}
+  return message.error(error);
+};
