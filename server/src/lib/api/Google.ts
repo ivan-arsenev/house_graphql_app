@@ -42,7 +42,7 @@ const parseAddress = (addressComponents: AddressComponent[]) => {
 
 export const Google = {
   authUrl: auth.generateAuthUrl({
-    // eslint-disable-next-line @typescript-eslint/camelcase
+     eslint-disable-next-line @typescript-eslint/camelcase
     access_type: "online",
     scope: [
       "https://www.googleapis.com/auth/userinfo.email",
