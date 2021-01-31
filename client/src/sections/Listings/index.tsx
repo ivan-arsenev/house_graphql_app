@@ -1,17 +1,16 @@
+import React, { useState, useRef, useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
+import { useQuery } from "@apollo/react-hooks";
 import { Affix, Layout, List, Typography } from "antd";
 import { ErrorBanner, ListingCard } from "../../lib/components";
-import { Link, useParams } from "react-router-dom";
+import { LISTINGS } from "../../lib/graphql/queries";
 import {
   Listings as ListingsData,
   ListingsVariables
 } from "../../lib/graphql/queries/Listings/__generated__/Listings";
-import { ListingsFilters, ListingsPagination, ListingsSkeleton } from "./components";
-import React, { useEffect, useRef, useState } from "react";
-
-import { LISTINGS } from "../../lib/graphql/queries";
 import { ListingsFilter } from "../../lib/graphql/globalTypes";
-import { useQuery } from "@apollo/react-hooks";
 import { useScrollToTop } from "../../lib/hooks";
+import { ListingsFilters, ListingsPagination, ListingsSkeleton } from "./components";
 
 interface MatchParams {
   location: string;

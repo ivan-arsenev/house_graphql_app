@@ -1,20 +1,20 @@
-import { Col, Layout, Row, Typography } from "antd";
-import { HomeHero, HomeListings, HomeListingsSkeleton } from "./components";
+import React from "react";
 import { Link, useHistory } from "react-router-dom";
+import { useQuery } from "@apollo/react-hooks";
+import { Col, Row, Layout, Typography } from "antd";
+import { LISTINGS } from "../../lib/graphql/queries";
 import {
   Listings as ListingsData,
-  ListingsVariables,
+  ListingsVariables
 } from "../../lib/graphql/queries/Listings/__generated__/Listings";
-
-import { LISTINGS } from "../../lib/graphql/queries";
 import { ListingsFilter } from "../../lib/graphql/globalTypes";
-import React from "react";
-import cancunImage from "./assets/cancun.jpg";
+import { useScrollToTop } from "../../lib/hooks";
 import { displayErrorMessage } from "../../lib/utils";
+import { HomeHero, HomeListings, HomeListingsSkeleton } from "./components";
+
 import mapBackground from "./assets/map-background.jpg";
 import sanFransiscoImage from "./assets/san-fransisco.jpg";
-import { useQuery } from "@apollo/react-hooks";
-import { useScrollToTop } from "../../lib/hooks";
+import cancunImage from "./assets/cancun.jpg";
 
 const { Content } = Layout;
 const { Paragraph, Title } = Typography;
@@ -22,16 +22,14 @@ const { Paragraph, Title } = Typography;
 const PAGE_LIMIT = 4;
 const PAGE_NUMBER = 1;
 
-
-
 export const Home = () => {
   const { loading, data } = useQuery<ListingsData, ListingsVariables>(LISTINGS, {
     variables: {
       filter: ListingsFilter.PRICE_HIGH_TO_LOW,
       limit: PAGE_LIMIT,
-      page: PAGE_NUMBER,
+      page: PAGE_NUMBER
     },
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: "cache-and-network"
   });
 
   const history = useHistory();
@@ -49,7 +47,7 @@ export const Home = () => {
 
   const renderListingsSection = () => {
     if (loading) {
-      return <HomeListingsSkeleton title="Premium Listings - Loading" />;
+      return <HomeListingsSkeleton />;
     }
 
     if (data) {
