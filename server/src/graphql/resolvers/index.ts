@@ -1,12 +1,12 @@
-import { bookingResolvers } from "./Booking"
-import { listingResolvers } from "./Listing"
-import merge from "lodash.merge"
-import { userResolvers } from "./User"
-import { viewerResolvers } from "./Viewer"
+import merge from "lodash.merge";
+import { bookingResolvers } from "./Booking";
+import { listingResolvers } from "./Listing";
+import { userResolvers } from "./User";
+import { viewerResolvers } from "./Viewer";
 
 export const resolvers = merge(
-  viewerResolvers,
-  userResolvers,
+  bookingResolvers,
   listingResolvers,
-  bookingResolvers
-)
+  userResolvers,
+  viewerResolvers
+);

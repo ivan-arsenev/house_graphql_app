@@ -1,17 +1,17 @@
-import { Database, User, Viewer } from "../../../lib/types"
-import { Request, Response } from "express"
-
-import { Google } from "../../../lib/api"
-import { IResolvers } from "apollo-server-express"
-import { LogInArgs } from "./types"
-import crypto from "crypto"
+import crypto from "crypto";
+import { Request, Response } from "express";
+import { IResolvers } from "apollo-server-express";
+import { Google, Stripe } from "../../../lib/api";
+import { Viewer, Database, User } from "../../../lib/types";
+import { authorize } from "../../../lib/utils";
+import { LogInArgs, ConnectStripeArgs } from "./types";
 
 const cookieOptions = {
   httpOnly: true,
   sameSite: true,
   signed: true,
   secure: process.env.NODE_ENV === "development" ? false : true,
-}
+};
 
 const logInViaGoogle = async (
   code: string,
@@ -19,35 +19,37 @@ const logInViaGoogle = async (
   db: Database,
   res: Response
 ): Promise<User | undefined> => {
-  const { user } = await Google.logIn(code)
+  const { user } = await Google.logIn(code);
 
   if (!user) {
-    throw new Error("Google login error")
+    throw new Error("Google login error");
   }
 
-  // Name/Phone/Email/ lists
-  const userNameList = user.names && user.names.length ? user.names : null
-  const userPhotoList = user.photos && user.photos.length ? user.photos : null
-  const userEmailList =
-    user.emailAddresses && user.emailAddresses.length
-      ? user.emailAddresses
-      : null
+  // Name/Photo/Email Lists
+  const userNamesList = user.names && user.names.length ? user.names : null;
+  const userPhotosList = user.photos && user.photos.length ? user.photos : null;
+  const userEmailsList =
+    user.emailAddresses && user.emailAddresses.length ? user.emailAddresses : null;
 
-  const userName = userNameList ? userNameList[0].displayName : null
+  // User Display Name
+  const userName = userNamesList ? userNamesList[0].displayName : null;
 
+  // User Id
   const userId =
-    userNameList && userNameList[0].metadata && userNameList[0].metadata.source
-      ? userNameList[0].metadata.source.id
-      : null
+    userNamesList && userNamesList[0].metadata && userNamesList[0].metadata.source
+      ? userNamesList[0].metadata.source.id
+      : null;
 
+  // User Avatar
   const userAvatar =
-    userPhotoList && userPhotoList[0].url ? userPhotoList[0].url : null
+    userPhotosList && userPhotosList[0].url ? userPhotosList[0].url : null;
 
+  // User Email
   const userEmail =
-    userEmailList && userEmailList[0].value ? userEmailList[0].value : null
+    userEmailsList && userEmailsList[0].value ? userEmailsList[0].value : null;
 
   if (!userId || !userName || !userAvatar || !userEmail) {
-    throw new Error("Google login error")
+    throw new Error("Google login error");
   }
 
   const updateRes = await db.users.findOneAndUpdate(
@@ -61,10 +63,9 @@ const logInViaGoogle = async (
       },
     },
     { returnOriginal: false }
-  )
+  );
 
-  // if viewer not exist
-  let viewer = updateRes.value
+  let viewer = updateRes.value;
 
   if (!viewer) {
     const insertResult = await db.users.insertOne({
@@ -76,18 +77,18 @@ const logInViaGoogle = async (
       income: 0,
       bookings: [],
       listings: [],
-    })
+    });
 
-    viewer = insertResult.ops[0]
+    viewer = insertResult.ops[0];
   }
 
   res.cookie("viewer", userId, {
     ...cookieOptions,
     maxAge: 365 * 24 * 60 * 60 * 1000,
-  })
+  });
 
-  return viewer
-}
+  return viewer;
+};
 
 const logInViaCookie = async (
   token: string,
@@ -99,24 +100,24 @@ const logInViaCookie = async (
     { _id: req.signedCookies.viewer },
     { $set: { token } },
     { returnOriginal: false }
-  )
+  );
 
-  let viewer = updateRes.value
+  let viewer = updateRes.value;
 
   if (!viewer) {
-    res.clearCookie("viewer", cookieOptions)
+    res.clearCookie("viewer", cookieOptions);
   }
 
-  return viewer
-}
+  return viewer;
+};
 
 export const viewerResolvers: IResolvers = {
   Query: {
     authUrl: (): string => {
       try {
-        return Google.authUrl
+        return Google.authUrl;
       } catch (error) {
-        throw new Error(`Failed to query Google Auth Url: ${error}`)
+        throw new Error(`Failed to query Google Auth Url: ${error}`);
       }
     },
   },
@@ -127,15 +128,15 @@ export const viewerResolvers: IResolvers = {
       { db, req, res }: { db: Database; req: Request; res: Response }
     ): Promise<Viewer> => {
       try {
-        const code = input ? input.code : null
-        const token = crypto.randomBytes(16).toString("hex")
+        const code = input ? input.code : null;
+        const token = crypto.randomBytes(16).toString("hex");
 
         const viewer: User | undefined = code
           ? await logInViaGoogle(code, token, db, res)
-          : await logInViaCookie(token, db, req, res)
+          : await logInViaCookie(token, db, req, res);
 
         if (!viewer) {
-          return { didRequest: true }
+          return { didRequest: true };
         }
 
         return {
@@ -144,30 +145,106 @@ export const viewerResolvers: IResolvers = {
           avatar: viewer.avatar,
           walletId: viewer.walletId,
           didRequest: true,
-        }
+        };
       } catch (error) {
-        throw new Error(`Failed to log in: ${error}`)
+        throw new Error(`Failed to log in: ${error}`);
       }
     },
-    logOut: (
+    logOut: (_root: undefined, _args: {}, { res }: { res: Response }): Viewer => {
+      try {
+        res.clearCookie("viewer", cookieOptions);
+        return { didRequest: true };
+      } catch (error) {
+        throw new Error(`Failed to log out: ${error}`);
+      }
+    },
+    connectStripe: async (
+      _root: undefined,
+      { input }: ConnectStripeArgs,
+      { db, req }: { db: Database; req: Request }
+    ): Promise<Viewer> => {
+      try {
+        const { code } = input;
+
+        let viewer = await authorize(db, req);
+        if (!viewer) {
+          throw new Error("viewer cannot be found");
+        }
+
+        const wallet = await Stripe.connect(code);
+        if (!wallet || !wallet.stripe_user_id) {
+          throw new Error("stripe grant error");
+        }
+
+        const updateRes = await db.users.findOneAndUpdate(
+          { _id: viewer._id },
+          { $set: { walletId: wallet.stripe_user_id } },
+          { returnOriginal: false }
+        );
+
+        if (!updateRes.value) {
+          throw new Error("viewer could not be updated");
+        }
+
+        viewer = updateRes.value;
+
+        return {
+          _id: viewer._id,
+          token: viewer.token,
+          avatar: viewer.avatar,
+          walletId: viewer.walletId,
+          didRequest: true,
+        };
+      } catch (error) {
+        throw new Error(`Failed to connect with Stripe: ${error}`);
+      }
+    },
+    disconnectStripe: async (
       _root: undefined,
       _args: {},
-      { res }: { res: Response }
-    ): Viewer => {
+      { db, req }: { db: Database; req: Request }
+    ): Promise<Viewer> => {
       try {
-        res.clearCookie("viewer", cookieOptions)
-        return { didRequest: true }
+        let viewer = await authorize(db, req);
+        if (!viewer || !viewer.walletId) {
+          throw new Error("viewer cannot be found or has not connected with Stripe");
+        }
+
+        const wallet = await Stripe.disconnect(viewer.walletId);
+        if (!wallet) {
+          throw new Error("stripe disconnect error");
+        }
+
+        const updateRes = await db.users.findOneAndUpdate(
+          { _id: viewer._id },
+          { $set: { walletId: null } },
+          { returnOriginal: false }
+        );
+
+        if (!updateRes.value) {
+          throw new Error("viewer could not be updated");
+        }
+
+        viewer = updateRes.value;
+
+        return {
+          _id: viewer._id,
+          token: viewer.token,
+          avatar: viewer.avatar,
+          walletId: viewer.walletId,
+          didRequest: true,
+        };
       } catch (error) {
-        throw new Error(`Failed to log out: ${error}`)
+        throw new Error(`Failed to disconnect with Stripe: ${error}`);
       }
     },
   },
   Viewer: {
     id: (viewer: Viewer): string | undefined => {
-      return viewer._id
+      return viewer._id;
     },
     hasWallet: (viewer: Viewer): boolean | undefined => {
-      return viewer.walletId ? true : undefined
+      return viewer.walletId ? true : undefined;
     },
   },
-}
+};

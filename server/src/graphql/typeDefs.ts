@@ -1,11 +1,6 @@
-import { gql } from "apollo-server-express"
+import { gql } from "apollo-server-express";
 
 export const typeDefs = gql`
-  type Bookings {
-    total: Int!
-    result: [Booking!]!
-  }
-
   type Booking {
     id: ID!
     listing: Listing!
@@ -14,26 +9,9 @@ export const typeDefs = gql`
     checkOut: String!
   }
 
-  type Listings {
-    region: String
+  type Bookings {
     total: Int!
-    result: [Listing!]!
-  }
-  type Listing {
-    id: ID!
-    title: String!
-    description: String!
-    image: String!
-    host: User!
-    type: ListingType!
-    address: String!
-    city: String!
-    country: String!
-    admin: String!
-    bookings(limit: Int!, page: Int!): Bookings
-    bookingsIndex: String!
-    price: Int!
-    numOfGuests: Int!
+    result: [Booking!]!
   }
 
   enum ListingType {
@@ -44,6 +22,29 @@ export const typeDefs = gql`
   enum ListingsFilter {
     PRICE_LOW_TO_HIGH
     PRICE_HIGH_TO_LOW
+  }
+
+  type Listing {
+    id: ID!
+    title: String!
+    description: String!
+    image: String!
+    host: User!
+    type: ListingType!
+    address: String!
+    country: String!
+    admin: String!
+    city: String!
+    bookings(limit: Int!, page: Int!): Bookings
+    bookingsIndex: String!
+    price: Int!
+    numOfGuests: Int!
+  }
+
+  type Listings {
+    region: String
+    total: Int!
+    result: [Listing!]!
   }
 
   type User {
@@ -69,6 +70,27 @@ export const typeDefs = gql`
     code: String!
   }
 
+  input ConnectStripeInput {
+    code: String!
+  }
+
+  input HostListingInput {
+    title: String!
+    description: String!
+    image: String!
+    type: ListingType!
+    address: String!
+    price: Int!
+    numOfGuests: Int!
+  }
+
+  input CreateBookingInput {
+    id: ID!
+    source: String!
+    checkIn: String!
+    checkOut: String!
+  }
+
   type Query {
     authUrl: String!
     user(id: ID!): User!
@@ -84,5 +106,9 @@ export const typeDefs = gql`
   type Mutation {
     logIn(input: LogInInput): Viewer!
     logOut: Viewer!
+    connectStripe(input: ConnectStripeInput!): Viewer!
+    disconnectStripe: Viewer!
+    hostListing(input: HostListingInput!): Listing!
+    createBooking(input: CreateBookingInput!): Booking!
   }
-`
+`;
