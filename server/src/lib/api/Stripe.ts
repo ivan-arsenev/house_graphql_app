@@ -8,8 +8,6 @@ export const Stripe = {
       /* eslint-disable @typescript-eslint/camelcase */
       grant_type: "authorization_code",
       code,
-
-
       /* eslint-enable @typescript-eslint/camelcase */
     });
 
