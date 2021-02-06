@@ -11,6 +11,8 @@ export const Stripe = {
       /* eslint-enable @typescript-eslint/camelcase */
     });
 
+
+
     return response;
   },
   disconnect: async (stripeUserId: string) => {
