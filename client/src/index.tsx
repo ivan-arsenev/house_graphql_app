@@ -82,6 +82,8 @@ const App = () => {
     <ErrorBanner description="We weren't able to verify if you were logged in. Please try again later!" />
   ) : null;
 
+
+
   return (
     <StripeProvider apiKey={process.env.REACT_APP_S_PUBLISHABLE_KEY as string}>
       <Router>
